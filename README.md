@@ -16,83 +16,64 @@ STEP-4: Arrange the characters of the keyword in sorted order and the correspond
 STEP-5: Read the characters row wise or column wise in the former order to get the cipher text.
 
 ## PROGRAM:
-```
-# Rail Fence Cipher Encryption and Decryption
-def encrypt(text, key):
-	rail = [['\n' for i in range(len(text))] for j in range(key)]
-	dir_down = False
-	row, col = 0, 0
-	
-	for i in range(len(text)):
-		if (row == 0) or (row == key - 1):
-			dir_down = not dir_down
-		rail[row][col] = text[i]
-		col += 1
-		if dir_down:
-			row += 1
-		else:
-			row -= 1
-	result = []
-	for i in range(key):
-		for j in range(len(text)):
-			if rail[i][j] != '\n':
-				result.append(rail[i][j])
-	return("" . join(result))
-
-def decrypt(cipher, key):
-	rail = [['\n' for i in range(len(cipher))] for j in range(key)]
-	dir_down = None
-	row, col = 0, 0
-	for i in range(len(cipher)):
-		if row == 0:
-			dir_down = True
-		if row == key - 1:
-			dir_down = False
-		rail[row][col] = '*'
-		col += 1
-		if dir_down:
-			row += 1
-		else:
-			row -= 1
-	index = 0
-	for i in range(key):
-		for j in range(len(cipher)):
-			if ((rail[i][j] == '*') and
-			(index < len(cipher))):
-				rail[i][j] = cipher[index]
-				index += 1
-	result = []
-	row, col = 0, 0
-	for i in range(len(cipher)):
-		if row == 0:
-			dir_down = True
-		if row == key-1:
-			dir_down = False
-		if (rail[row][col] != '*'):
-			result.append(rail[row][col])
-			col += 1
-		if dir_down:
-			row += 1
-		else:
-			row -= 1
-	return("".join(result))
-
-#MAIN
-print("RAIL FENCE CIPHER: \n")
-text = 'swetha'
-key=4
-print("The Original Text: ",text)
-e = encrypt(text, key)
-d = decrypt(e, key)
-print("CipherText: ",e)
-print("Decrypted Text: ",d)
-
-```
+        #include <stdio.h>
+        #include <string.h>
+        
+        void encryptRailFence(char *text, int key, char *cipher)
+        {
+            int len = strlen(text);
+            int k = 0;
+        
+            for (int row = 0; row < key; row++) {
+                int step1 = (key - row - 1) * 2;
+                int step2 = row * 2;
+                int pos = row;
+        
+                int toggle = 0; 
+        
+                while (pos < len) {
+                    cipher[k++] = text[pos];
+        
+                    if (row == 0)
+                        pos += (key - 1) * 2;
+                    else if (row == key - 1)
+                        pos += (key - 1) * 2;
+                    else {
+                        if (toggle == 0) {
+                            pos += step1;
+                            toggle = 1;
+                        } else {
+                            pos += step2;
+                            toggle = 0;
+                        }
+                    }
+                }
+            }
+            cipher[k] = '\0';
+        }
+        
+        int main()
+        {
+            char text[100], cipher[100];
+            int key;
+        
+            scanf("%[^\n]", text);
+            
+            printf("Enter text: %s\n",text);
+            
+            scanf("%d", &key);
+            
+            printf("Enter key (number of rails): %d",key);
+            
+            encryptRailFence(text, key, cipher);
+            
+            printf("\nEncrypted text: %s\n", cipher);
+        
+            return 0;
+        }
 
 ## OUTPUT:
-
-<img width="389" height="264" alt="Screenshot 2025-09-13 085655" src="https://github.com/user-attachments/assets/0bdb8e9f-edc3-4673-9894-2865f467e202" />
-
+<img width="613" height="271" alt="image" src="https://github.com/user-attachments/assets/07d51fe6-c37a-43b3-9f04-6088e26064ed" />
 
 ## RESULT:
   Thus the rail fence algorithm had been executed successfully.
